@@ -105,4 +105,41 @@ public class BookingApp {
 
         scanner.close();
     }
+
+    public static void buscarAlojamientos(String[] ciudades, String[][] alojamientos, float[][] preciosHabitaciones,
+            int[][] disponibilidadHabitaciones, Scanner scanner) {
+        System.out.print("Ingrese una ciudad entre las opciones disponibles: ");
+        for (String ciudad : ciudades) {
+            System.out.print(ciudad + " | ");
+        }
+        System.out.println();
+
+        scanner.nextLine(); // Limpiar buffer
+        String ciudadEscogida = scanner.nextLine();
+
+        System.out.println("\nAlojamientos disponibles en " + ciudadEscogida + ":");
+        for (int i = 0; i < alojamientos.length; i++) {
+            if (alojamientos[i][1].equalsIgnoreCase(ciudadEscogida)) {
+                System.out.printf("Nombre: %s | Tipo: %s | Calificación: %.1f estrellas%n",
+                        alojamientos[i][0], alojamientos[i][2], Float.parseFloat(alojamientos[i][3]));
+                for (int j = 0; j < preciosHabitaciones[i].length; j++) {
+                    System.out.printf("  %d- %s: $%.2f | Disponibles: %d%n",
+                            j + 1, obtenerDescripcionHabitacion(j), preciosHabitaciones[i][j],
+                            disponibilidadHabitaciones[i][j]);
+                }
+            }
+        }
+    }
+
+    public static String obtenerDescripcionHabitacion(int indice) {
+        return switch (indice) {
+            case 0 -> "Suit Presidencial";
+            case 1 -> "Suit Matrimonial";
+            case 2 -> "Habitación Doble";
+            case 3 -> "Habitación Simple";
+            case 4 -> "Habitación Familiar";
+            default -> "Habitación Desconocida";
+        };
+    }
+    
 }
