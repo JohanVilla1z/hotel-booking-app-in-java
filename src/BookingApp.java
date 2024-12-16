@@ -219,5 +219,15 @@ public class BookingApp {
         }
         return ajuste;
     }
+
+    public static void confirmarReservacion() {
+        if (ultimaReserva.isEmpty()) {
+            System.out.println("No hay ninguna reserva para confirmar.");
+        } else {
+            historialReservas.add(ultimaReserva);
+            System.out.println("\nReservación confirmada y añadida al historial.");
+            ultimaReserva = ""; // Limpiar la reserva temporal después de confirmar
+        }
+    }
     
 }
