@@ -108,9 +108,8 @@ public class BookingApp {
                         scanner);
                 case 2 -> realizarReserva(alojamientos, preciosHabitaciones, disponibilidadHabitaciones, scanner);
                 case 3 -> reservarDiaDeSol(alojamientos, precioDiaSol, actividadesDiaSol, scanner);
-                case 4 -> confirmarReservacion();
-                case 5 -> verHistorialReservas();
-                case 6 -> System.out.println("Gracias por usar Booking Colombia. ¡Hasta pronto!");
+                case 4 -> verHistorialReservas();
+                case 0 -> System.out.println("Gracias por usar Booking Colombia. ¡Hasta pronto!");
                 default -> System.out.println("Opción no válida, intente nuevamente.");
             }
 
