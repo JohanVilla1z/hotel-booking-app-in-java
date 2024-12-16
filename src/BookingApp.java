@@ -98,6 +98,7 @@ public class BookingApp {
             System.out.println("2. Reservar habitación");
             System.out.println("3. Reservar Día de Sol");
             System.out.println("4. Ver historial de reservaciones");
+            System.out.println("5. Gestionar reservaciones");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -108,6 +109,7 @@ public class BookingApp {
                 case 2 -> realizarReserva(alojamientos, preciosHabitaciones, disponibilidadHabitaciones, scanner);
                 case 3 -> reservarDiaDeSol(alojamientos, precioDiaSol, actividadesDiaSol, scanner);
                 case 4 -> verHistorialReservas();
+                case 5 -> cancelarReservacion(disponibilidadHabitaciones, alojamientos); // TODO: Implementar
                 case 0 -> System.out.println("Gracias por usar Booking Colombia. ¡Hasta pronto!");
                 default -> System.out.println("Opción no válida, intente nuevamente.");
             }
@@ -315,6 +317,74 @@ public class BookingApp {
             System.out.println("¡Reserva confirmada y guardada en el historial!");
         } else {
             System.out.println("La reserva no se ha confirmado.");
+        }
+    }
+
+    public static void cancelarReservacion(int[][] disponibilidadHabitaciones, String[][] alojamientos) {
+        if (historialReservas.isEmpty()) {
+            System.out.println("No hay reservas confirmadas para cancelar.");
+            return;
+        }
+
+        // Mostrar historial numerado
+        System.out.println("\nHistorial de Reservas Confirmadas:");
+        int index = 1;
+        for (String reserva : historialReservas) {
+            System.out.printf("%d. %s%n", index, reserva);
+            System.out.println("----------------------");
+            index++;
+        }
+
+        // Solicitar al usuario la reserva a cancelar
+        System.out.print("Ingrese el número de la reserva que desea cancelar o 0 para salir: ");
+        Scanner scanner = new Scanner(System.in);
+        int reservaIndex = scanner.nextInt() - 1;
+
+        if (reservaIndex < 0 || reservaIndex >= historialReservas.size()) {
+            System.out.println("Número de reserva no válido. Intente nuevamente.");
+            return;
+        }
+
+        // Obtener detalles de la reserva para ajustar disponibilidad (si aplica)
+        String reservaCancelada = historialReservas.get(reservaIndex);
+        System.out.println("\nCancelando la siguiente reserva:");
+        System.out.println(reservaCancelada);
+
+        // Ajustar disponibilidad si es una habitación
+        if (reservaCancelada.contains("Tipo de habitación")) {
+            ajustarDisponibilidad(reservaCancelada, disponibilidadHabitaciones, alojamientos);
+        }
+
+        historialReservas.remove(reservaIndex);
+        System.out.println("La reserva ha sido cancelada con éxito.");
+    }
+
+    private static int buscarIndiceHabitacion(String tipoHabitacion) {
+        return switch (tipoHabitacion) {
+            case "Suit Presidencial" -> 0;
+            case "Suit Matrimonial" -> 1;
+            case "Habitación Doble" -> 2;
+            case "Habitación Simple" -> 3;
+            case "Habitación Familiar" -> 4;
+            default -> -1;
+        };
+    }
+
+    private static void ajustarDisponibilidad(String reservaCancelada, int[][] disponibilidadHabitaciones,
+            String[][] alojamientos) {
+        String[] partes = reservaCancelada.split("\\n"); // Dividimos la información de la reserva por líneas
+        String nombreHotel = partes[1].split(":")[1].trim(); // Extraemos el nombre del hotel
+        String tipoHabitacion = partes[2].split(":")[1].trim(); // Extraemos el tipo de habitación
+
+        int indiceHotel = buscarIndiceHotel(nombreHotel, alojamientos);
+        int indiceHabitacion = buscarIndiceHabitacion(tipoHabitacion);
+
+        if (indiceHotel != -1 && indiceHabitacion != -1) {
+            disponibilidadHabitaciones[indiceHotel][indiceHabitacion]++;
+            System.out.printf("La disponibilidad de '%s' en '%s' ha sido actualizada.%n",
+                    tipoHabitacion, nombreHotel);
+        } else {
+            System.out.println("No se pudo ajustar la disponibilidad. Información inconsistente.");
         }
     }
 
