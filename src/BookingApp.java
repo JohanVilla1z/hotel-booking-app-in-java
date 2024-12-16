@@ -208,6 +208,18 @@ public class BookingApp {
                 precioTotal + ajuste, ajuste);
 
         System.out.println("\n" + ultimaReserva);
+
+        System.out.print("\n¿Desea confirmar esta reserva? (1: Sí / 2: No): ");
+
+        int confirmar = scanner.nextInt();
+
+        if (confirmar == 1) {
+            confirmarReservacion();
+
+        } else {
+            System.out.println("La reserva no se ha guardado, vuelva a intentarlo.");
+        }
+
     }
 
     public static int buscarIndiceHotel(String nombreHotel, String[][] alojamientos) {
