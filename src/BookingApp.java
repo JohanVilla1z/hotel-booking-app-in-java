@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -140,6 +142,82 @@ public class BookingApp {
             case 4 -> "Habitación Familiar";
             default -> "Habitación Desconocida";
         };
+    }
+
+     public static void realizarReserva(String[][] alojamientos, float[][] preciosHabitaciones,
+            int[][] disponibilidadHabitaciones, Scanner scanner) {
+        System.out.print("Ingrese el nombre del hotel: ");
+        scanner.nextLine(); // Limpiar buffer
+        String nombreHotel = scanner.nextLine();
+
+        int indiceHotel = buscarIndiceHotel(nombreHotel, alojamientos);
+        if (indiceHotel == -1) {
+            System.out.println("Hotel no encontrado.");
+            return;
+        }
+
+        System.out.print("Ingrese el tipo de habitación (1-5): ");
+        int tipoHabitacion = scanner.nextInt() - 1;
+
+        if (tipoHabitacion < 0 || tipoHabitacion >= preciosHabitaciones[indiceHotel].length) {
+            System.out.println("Tipo de habitación no válido.");
+            return;
+        }
+
+        if (disponibilidadHabitaciones[indiceHotel][tipoHabitacion] <= 0) {
+            System.out.println("No hay disponibilidad para este tipo de habitación.");
+            return;
+        }
+
+        disponibilidadHabitaciones[indiceHotel][tipoHabitacion]--;
+
+        System.out.print("Ingrese su nombre: ");
+        scanner.nextLine(); // Limpiar buffer
+        String nombre = scanner.nextLine();
+
+        System.out.print("Ingrese la fecha de inicio de la reserva (yyyy-MM-dd): ");
+        LocalDate fechaInicio = LocalDate.parse(scanner.nextLine());
+
+        System.out.print("Ingrese la fecha de finalización de la reserva (yyyy-MM-dd): ");
+        LocalDate fechaFin = LocalDate.parse(scanner.nextLine());
+
+        long noches = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+        if (noches <= 0) {
+            System.out.println("Fechas no válidas. La fecha de fin debe ser posterior a la de inicio.");
+            return;
+        }
+
+        float precioBase = preciosHabitaciones[indiceHotel][tipoHabitacion];
+        float precioTotal = precioBase * noches;
+        float ajuste = calcularAjuste(precioTotal, fechaInicio, fechaFin);
+
+        ultimaReserva = String.format(
+                "Reserva a nombre de %s en %s \nTipo de habitación: %s, \nDel %s al %s. (%d noches) \nPrecio total: $%.2f (Ajuste aplicado: $%.2f)",
+                nombre, nombreHotel, obtenerDescripcionHabitacion(tipoHabitacion), fechaInicio, fechaFin, noches,
+                precioTotal + ajuste, ajuste);
+
+        System.out.println("\n" + ultimaReserva);
+    }
+
+    public static int buscarIndiceHotel(String nombreHotel, String[][] alojamientos) {
+        for (int i = 0; i < alojamientos.length; i++) {
+            if (alojamientos[i][0].equalsIgnoreCase(nombreHotel)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static float calcularAjuste(float precioTotal, LocalDate fechaInicio, LocalDate fechaFin) {
+        float ajuste = 0;
+        if (fechaFin.getDayOfMonth() >= 25) {
+            ajuste = precioTotal * 0.15f;
+        } else if (fechaInicio.getDayOfMonth() >= 10 && fechaInicio.getDayOfMonth() <= 15) {
+            ajuste = precioTotal * 0.10f;
+        } else if (fechaInicio.getDayOfMonth() >= 5 && fechaInicio.getDayOfMonth() <= 10) {
+            ajuste = -precioTotal * 0.08f;
+        }
+        return ajuste;
     }
     
 }
