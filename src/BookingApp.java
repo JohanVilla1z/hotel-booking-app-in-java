@@ -97,9 +97,8 @@ public class BookingApp {
             System.out.println("1. Buscar alojamientos y disponibilidad");
             System.out.println("2. Reservar habitación");
             System.out.println("3. Reservar Día de Sol");
-            System.out.println("4. Confirmar reservación");
-            System.out.println("5. Ver historial de reservaciones");
-            System.out.println("6. Salir");
+            System.out.println("4. Ver historial de reservaciones");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
 
