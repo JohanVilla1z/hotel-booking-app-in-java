@@ -241,4 +241,57 @@ public class BookingApp {
             }
         }
     }
+
+    public static void reservarDiaDeSol(String[][] alojamientos, float[] precioDiaSol, String[] actividades,
+    Scanner scanner) {
+System.out.println("\nAlojamientos disponibles para Día de Sol:");
+for (int i = 0; i < alojamientos.length; i++) {
+    System.out.printf("%d. %s | Ciudad: %s | Precio por adulto: $%.2f%n Actividades: %s%n%n",
+            i + 1, alojamientos[i][0], alojamientos[i][1], precioDiaSol[i], actividades[i]);
+}
+
+System.out.print("\nSeleccione el número del alojamiento donde desea reservar: ");
+int opcionHotel = scanner.nextInt() - 1;
+
+if (opcionHotel < 0 || opcionHotel >= alojamientos.length) {
+    System.out.println("Opción no válida.");
+    return;
+}
+
+System.out.print("Ingrese la fecha de la reserva (yyyy-MM-dd): ");
+scanner.nextLine(); // Limpiar buffer
+LocalDate fechaReserva = LocalDate.parse(scanner.nextLine());
+
+System.out.print("Ingrese la cantidad de adultos: ");
+int adultos = scanner.nextInt();
+
+System.out.print("Ingrese la cantidad de niños: ");
+int ninos = scanner.nextInt();
+
+float precioPorNino = precioDiaSol[opcionHotel] * 0.70f; // Descuento del 30% para niños
+float costoTotal = (adultos * precioDiaSol[opcionHotel]) + (ninos * precioPorNino);
+
+// Aplicar ajustes por temporada
+float ajuste = calcularAjuste(costoTotal, fechaReserva, fechaReserva);
+float costoFinal = costoTotal + ajuste;
+
+// Mostrar el resumen de la reserva
+System.out.println("\nResumen de la Reserva:");
+System.out.printf("Hotel: %s | Ciudad: %s%n", alojamientos[opcionHotel][0], alojamientos[opcionHotel][1]);
+System.out.printf("Fecha: %s | Adultos: %d | Niños: %d%n", fechaReserva, adultos, ninos);
+System.out.printf("Costo Total: $%.2f (Incluye ajuste de $%.2f)%n", costoFinal, ajuste);
+
+System.out.print("¿Desea confirmar esta reserva? (1: Sí / 2: No): ");
+int confirmar = scanner.nextInt();
+
+if (confirmar == 1) {
+    String reserva = String.format("Día de Sol: %s | Fecha: %s | Adultos: %d | Niños: %d | Total: $%.2f | Con acceso a: %s",
+            alojamientos[opcionHotel][0], fechaReserva, adultos, ninos, costoFinal, actividades[opcionHotel]);
+    historialReservas.add(reserva);
+    System.out.println("¡Reserva confirmada y guardada en el historial!");
+} else {
+    System.out.println("La reserva no se ha confirmado.");
+}
+}
+
 }
