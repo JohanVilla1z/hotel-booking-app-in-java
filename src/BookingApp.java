@@ -113,7 +113,7 @@ public class BookingApp {
                 default -> System.out.println("Opción no válida, intente nuevamente.");
             }
 
-        } while (opcion != 6);
+        } while (opcion != 0);
 
         scanner.close();
     }
