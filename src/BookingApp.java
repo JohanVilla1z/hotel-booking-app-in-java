@@ -144,7 +144,7 @@ public class BookingApp {
         };
     }
 
-     public static void realizarReserva(String[][] alojamientos, float[][] preciosHabitaciones,
+    public static void realizarReserva(String[][] alojamientos, float[][] preciosHabitaciones,
             int[][] disponibilidadHabitaciones, Scanner scanner) {
         System.out.print("Ingrese el nombre del hotel: ");
         scanner.nextLine(); // Limpiar buffer
@@ -229,5 +229,16 @@ public class BookingApp {
             ultimaReserva = ""; // Limpiar la reserva temporal después de confirmar
         }
     }
-    
+
+    public static void verHistorialReservas() {
+        if (historialReservas.isEmpty()) {
+            System.out.println("No hay reservas confirmadas.");
+        } else {
+            System.out.println("\nHistorial de Reservas Confirmadas:");
+            for (String reserva : historialReservas) {
+                System.out.println(reserva);
+                System.out.println("----------------------");
+            }
+        }
+    }
 }
