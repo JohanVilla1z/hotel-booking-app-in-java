@@ -257,9 +257,11 @@ public class BookingApp {
             System.out.println("No hay reservas confirmadas.");
         } else {
             System.out.println("\nHistorial de Reservas Confirmadas:");
+            int index = 1; // Iniciamos de enumeracion de reservas desde 1
             for (String reserva : historialReservas) {
-                System.out.println(reserva);
+                System.out.printf("%d. %s%n", index, reserva);
                 System.out.println("----------------------");
+                index++;
             }
         }
     }
